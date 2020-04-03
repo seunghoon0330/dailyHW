@@ -1,0 +1,15 @@
+CREATE TABLE books(
+bno varchar2(20),
+btitle varchar2(50),
+bwriter varchar2(50),
+bcontent varchar2(4000),
+bdate DATE,
+bhit NUMBER
+);
+
+INSERT INTO  BOOKS VALUES('1','던만추','작가','앙몰라~','2020-04-03',0);
+SELECT * FROM BOOKS;
+
+SELECT * FROM BOOKS ORDER BY TO_NUMBER(bno) DESC;
+INSERT INTO BOOKS VALUES((SELECT MAX(TO_NUMBER(bno))+1 FROM BOOKS),
+'던만추','작가','내용',SYSTIMESTAMP,0);
