@@ -1,0 +1,22 @@
+create table mvc_board(
+bid number(4) PRIMARY key,
+bname varchar2(20),
+btitle varchar2(100),
+bcontent varchar2(300),
+bdate Date DEFAULT sysdate,
+bhit number(4) DEFAULT 0,
+bgroup number(4),
+bstep number(4),
+bindent number(4)
+);
+commit;
+create SEQUENCE mvc_board_seq;
+
+SELECT * FROM mvc_board;
+
+insert into mvc_board values(mvc_board_seq.nextval,'sh','java1','java111',sysdate,0,MVC_BOARD_SEQ.currval,0,0);
+
+select bid,bname,btitle,bcontent,bdate,bhit,bgroup,bstep,bindent from mvc_board order by bgroup desc,bstep asc;
+
+delete mvc_board;
+
