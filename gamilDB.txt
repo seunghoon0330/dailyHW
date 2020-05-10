@@ -1,0 +1,8 @@
+create table hhhmember(
+hhhid varchar2(10) primary key,
+hhhpw varchar2(10),
+hhhnickname varchar2(20) unique,
+hhhemail varchar2(50),
+hhhemailhash varchar2(64),
+hhhemailchecked number
+);

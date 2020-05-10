@@ -1,0 +1,265 @@
+SELECT * FROM pg_user;
+SELECT * FROM pg_user_mng;
+SELECT * FROM pg_admin;
+SELECT * FROM pg_movie;
+SELECT * FROM pg_drama;
+SELECT * FROM pg_review;
+SELECT * FROM pg_notice;
+SELECT * FROM pg_qna;
+drop table pg_review;
+drop sequence qna_num_seq;
+
+-- 1. 회원정보
+create table pg_user(
+user_code number(5) primary key not null,
+user_id varchar2(20) not null,
+user_pass varchar2(20) not null,
+user_mail varchar2(30) not null,
+user_name varchar2(10) not null,
+user_birth varchar2(8) not null,
+user_gender number(1) not null,
+user_phone varchar2(11) not null,
+user_regdate date default sysdate
+);
+
+-- joindate(가입일자)
+-- 날짜/시간형 데이터타입
+-- date : 2020-05-05 
+-- datetime : 2020-05-05 23:55:40
+
+-- gender : 1=남자, 2=여자
+
+-- 회원 정보 memcode 시퀀스 생성
+create sequence user_code_seq
+start with 0
+increment by 1
+minvalue 0
+nocycle;
+
+-- * sql문
+-- 회원정보 삽입(insert)
+insert into pg_user(user_code,user_id,user_pass,
+user_mail,user_name,user_birth,user_gender, 
+user_phone,user_regdate) values(user_code_seq.nextval,
+'damdadidam','dam1234567@!','damdadidam@gmail.com',
+'이길자','19950111',2,'01019950111',sysdate);
+
+
+-- 2. 회원관리
+create table pg_user_mng(
+user_code number primary key not null,
+user_id varchar2(20) not null, 
+user_level varchar2(10) not null,
+user_status number not null 
+);
+
+-- user_level(회원등급) : 프리미엄, 스탠다드, 베이직
+-- user_status(계정상태) : 0=회원, 1=탈퇴회원, 2=휴면회원
+
+-- *sql문
+-- 회원정보 삽입(insert)
+insert into pg_user_mng(user_code,user_id,
+user_level,user_status) values(user_code_seq.currval,
+'damdadidam','프리미엄',0);
+
+-- 회원정보 가져오기(정렬-등급desc, 계정상태asc)
+select * from pg_user_mng order by user_level desc;
+
+-- 회원정보 innerjoin .. 테이블합치기 ... 애초에 합칠지 결정
+
+
+
+
+-- 3. 관리자정보(코드 0)
+create table pg_admin(
+admin_code number primary key not null,
+admin_id varchar2(10) not null,
+admin_pass varchar2(20) not null,
+admin_mail varchar2(30) not null,
+admin_name varchar2(10) not null
+);
+
+-- * sql문
+-- 관리자정보 삽입(insert)
+insert into pg_admin(admin_code,admin_id,admin_pass,
+admin_mail,admin_name) values(0,'iamgoodadmin',
+'goodadmin23!@','admin23@gmail.com','관리자');
+
+
+-- 4. 영화 정보 테이블
+create table pg_movie(
+movie_code number not null primary key,
+movie_title varchar2(100) not null,
+movie_img varchar2(500) not null,
+movie_age varchar2(20) not null,
+movie_time varchar2(10) not null,
+movie_summary varchar2(2000) not null,
+movie_director varchar2(100) not null,
+movie_actor varchar2(100) not null,
+movie_genre varchar2(20) not null,
+movie_nation varchar2(20) not null,
+movie_date varchar2(20) not null,
+movie_rating number not null
+);
+
+-- 영화 정보 movie_code 시퀀스 생성
+create sequence movie_code_seq
+start with 499
+increment by 1
+minvalue 1
+nocycle;
+
+-- * sql문
+-- 영화정보 삽입(insert)
+insert into pg_movie(movie_code,movie_title,movie_img,
+movie_age,movie_time,movie_summary,movie_director, 
+movie_actor,movie_genre,movie_nation,movie_date,
+movie_rating) values(movie_code_seq.nextval,
+'콜 미 바이 유어 네임','포스터이미지경로','청소년관람불가',
+'2시간 12분','이탈리아 근교의 어느 가족 별장, 여름이 끝나기만을 
+기다리던 17살 소년 엘리오. 24살 청년 올리버가 엘리오 아버지의 
+보조 연구원으로 찾아오면서 그들의 특별한 여름이 시작된다.',
+'루카 구아다니노','티모시 샬라메, 아미 해머, 에스테르 가렐, 
+마이클 스털버그, 아미라 카사르','로맨스,드라마','이탈리아,프랑스',
+'2017년',4.0);
+
+-- 영화정보 가져오기(select)
+-- 정렬 : movie_code desc(최신등록일순), movie_rating desc(평점높은순)
+select movie_code,movie_title,movie_img,
+movie_age,movie_time,movie_summary,movie_director, 
+movie_actor,movie_genre,movie_nation,movie_date,
+movie_rating from pg_movie order by movie_code desc;
+
+-- 검색창 필드 : 대분류(타입:영화/드라마) > 소분류(제목,감독,배우)
+-- 쿼리 jsp 이클립스 참고 ... 페이징처리하는 부분 ...
+
+
+
+-- 5. 드라마 정보 테이블
+create table pg_drama(
+drama_code number not null primary key,
+drama_title varchar2(100) not null,
+drama_img varchar2(500) not null,
+drama_age varchar2(20) not null,
+drama_epi number not null,
+drama_summary varchar2(2000) not null,
+drama_director varchar2(100) not null,
+drama_actor varchar2(100) not null,
+drama_genre varchar2(20) not null,
+drama_nation varchar2(20) not null,
+drama_date varchar2(20) not null,
+drama_rating number not null
+);
+
+-- 드라마 정보 drama_code 시퀀스 생성
+create sequence drama_code_seq
+start with 899
+increment by 1
+minvalue 1
+nocycle;
+
+-- * sql문
+-- 드라마정보 삽입(insert)
+insert into pg_drama(drama_code,drama_title,drama_img,
+drama_age,drama_epi,drama_summary,drama_director, 
+drama_actor,drama_genre,drama_nation,drama_date,
+drama_rating) values(drama_code_seq.nextval,
+'부부의 세계','포스터이미지경로','청소년관람불가',16,
+'[무삭제판] 성공한 가정의학과 전문의이자 다정한 남편, 사랑스러운
+아들까지 남부러울 것 없이 살아가던 선우. 그러나 남편 태오의 외도를
+알게 되면서 선우의 일상은 송두리째 흔들리기 시작한다.','모완일',
+'김희애, 박해준, 한소희, 박선영, 김영민','스릴러,드라마','한국',
+'2020년',4.4);
+
+-- 드라마정보 가져오기(select)
+-- 정렬 : drama_code desc(최신등록일순), drama_rating desc(평점높은순)
+select drama_code,drama_title,drama_img,
+drama_age,drama_epi,drama_summary,drama_director, 
+drama_actor,drama_genre,drama_nation,drama_date,
+drama_rating from pg_drama order by drama_rating desc;
+
+
+
+-- 5. 리뷰 테이블
+-- 평점 필드, 유저 아이디 필드
+-- 나중에 db를 가져올 때 select avg(평점) from 평점테이블 where id="가져올 아이디";
+-- : 해당 아이디의 평점을 모두 가져올 수 있다.
+-- 한꺼번에 가져오고 싶다면?
+-- select id, avg(평점) from 평점테이블 group by id;
+create table pg_review(
+review_num number primary key not null,
+review_work number not null,
+review_writer varchar2(10) not null,
+review_content varchar2(200) not null,
+review_rating number not null,
+review_date date default sysdate
+);
+
+-- review_work : 리뷰할 작품코드(movie_code/drama_code) fk
+-- review_rating : 평점 (1,2,3,4,5)
+
+-- 리뷰글번호 review_num 시퀀스 생성
+create sequence review_num_seq
+start with 0
+increment by 1
+minvalue 0
+nocycle;
+
+-- * sql문
+-- 리뷰 삽입(insert)
+insert into pg_review(review_num,review_work,
+review_writer,review_content,review_rating,review_date) 
+values(review_num_seq.nextval,900,'damdadidam',
+'부부의 세계 안 본 사람은 있어도 한 번 본 사람은 없다.',
+5,sysdate);
+
+-- 리뷰정보 가져오기(select)
+-- 정렬 : review_date desc(최신등록일순), review_rating desc(평점높은순)
+select review_num,review_work,review_writer,
+review_content,review_rating,review_date 
+from pg_review order by review_rating desc;
+
+
+
+-- 6. 공지사항
+create table pg_notice(
+notice_num number not null primary key,
+notice_title varchar2(100) not null,
+notice_content varchar2(2000) not null,
+notice_date date default sysdate,
+notice_hits number default 0
+);
+
+-- 공지글번호 notice_num 시퀀스 생성
+create sequence notice_num_seq
+start with 0
+increment by 1
+minvalue 0
+nocycle;
+
+
+-- 문의답변 테이블, 시퀀스 아직 생성x
+-- 7. 문의답변
+create table pg_qna(
+qna_num number not null primary key,
+qna_type varchar2(10) not null,
+qna_title varchar2(100) not null,
+qna_writer varchar2(10) not null,
+qna_content varchar2(2000) not null,
+qna_date date default sysdate,
+qna_hits varchar2(10) default 0,
+qna_group number(4),
+qna_step number(4),
+qna_indent number(4)
+);
+
+-- 문의글번호 qna_num 시퀀스 생성
+create sequence qna_num_seq
+start with 0
+increment by 1
+minvalue 0
+nocycle;
+
+
+-- 저장
+commit;

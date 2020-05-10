@@ -1,0 +1,10 @@
+pom.xml에 library 추가
+
+IDao 인터페이스 ~dao에 추가
+IDao.xml ~mapper에 추가
+
+Servlet-context  에 bean 등록
+dataSource
+template
+sqlSessionFactoryBean
+sqlSession
