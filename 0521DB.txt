@@ -1,0 +1,32 @@
+-- 6. 공지사항
+create table pg_notice(
+notice_num number not null primary key,
+notice_title varchar2(100) not null,
+notice_content varchar2(2000) not null,
+notice_writer varchar2(50) NOT NULL,
+notice_date date default sysdate,
+notice_hits number default 0
+);
+
+
+INSERT INTO PG_NOTICE VALUES(
+0,'신작 출시','05월 19일자로 새로운 신작이 출시되었습니다. 즐거운 관람 되십시요','관리자','2020-05-19',0
+);
+INSERT INTO PG_NOTICE VALUES(
+1,'공지사항','05월 19일 오픈','관리자','2020-05-19',0
+);
+
+-- 공지글번호 notice_num 시퀀스 생성
+create sequence notice_num_seq
+start with 0
+increment by 1
+minvalue 0
+nocycle;
+
+drop sequence notice_num_seq;
+
+SELECT * FROM pg_notice;
+DROP TABLE PG_NOTICE;
+
+
+COMMIT;
